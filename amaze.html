@@ -28,11 +28,32 @@
     height: 25px;
     border-radius: 100%;
     background: yellow;
-    /* border: 1px solid black; */
     position: absolute;
     left: 0px;
     top: 0px;
     z-index: 1;
+    opacity: 1;
+    transition: opacity .25s;
+    transition: width .25s;
+    transition: height .25s;
+
+  }
+  .player.moving{
+    opacity: .7;
+    width: 15px;
+    height: 15px;
+  }
+
+  @keyframes playerCantMove{
+    0%{
+      background: yellow;
+    }
+    50%{
+      background: red;
+    }
+    100%{
+      background: yellow;
+    }
   }
   </style>
 </head>
@@ -55,6 +76,7 @@ let playerPos = [0, 0];
     if(e.code === LEFT){
       newPlayerPos = [playerPos[0], playerPos[1] - 1];
       if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        renderPlayerCantMove();
         return;
       } else {
         playerPos = newPlayerPos;
@@ -62,6 +84,7 @@ let playerPos = [0, 0];
     } else if (e.code === RIGHT){
       newPlayerPos = [playerPos[0], playerPos[1] + 1];
       if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        renderPlayerCantMove();
         return;
       } else {
         playerPos = newPlayerPos;
@@ -69,6 +92,7 @@ let playerPos = [0, 0];
     } else if (e.code === UP){
       newPlayerPos = [playerPos[0] - 1, playerPos[1]];
       if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        renderPlayerCantMove();
         return;
       } else {
         playerPos = newPlayerPos;
@@ -76,6 +100,7 @@ let playerPos = [0, 0];
     } else if (e.code === DOWN){
       newPlayerPos = [playerPos[0] + 1, playerPos[1]];
       if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        renderPlayerCantMove();
         return;
       } else {
         playerPos = newPlayerPos;
@@ -88,7 +113,13 @@ let playerPos = [0, 0];
     let renderedPlayer = document.querySelector('.player');
     renderedPlayer.style.top = newRow * 25 + 'px';
     renderedPlayer.style.left = newCol * 25 + 'px';
+    renderedPlayer.style.transition = 'left top .25s';
+    renderedPlayer.style.transition = 'top .25s';
+  }
 
+  function renderPlayerCantMove(){
+    let renderedPlayer = document.querySelector('.player');
+    renderedPlayer.style.animation = 'playerCantMove .25s ease';
   }
 
   function isAvailableSpace(row, col, yourGrid){
@@ -147,7 +178,7 @@ function drawGrid(coordinates){
     }
   }
 }
-const grid = createSquareGrid(25);
+const grid = createSquareGrid(15);
 
 drawGrid(grid);
 
