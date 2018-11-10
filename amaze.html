@@ -2,14 +2,14 @@
 <html>
 <head>
   <style>
+  body{
+    background: grey;
+  }
   .square{
     width: 25px;
     height: 25px;
     background: yellow;
     position: absolute;
-  }
-  .board{
-    display: flex;
   }
   .filled{
     width: 25px;
@@ -20,7 +20,7 @@
   .empty{
     width: 25px;
     height: 25px;
-    background: #fff;
+    background: grey;
     position: absolute;
   }
   .player{
@@ -33,7 +33,6 @@
     left: 0px;
     top: 0px;
     z-index: 1;
-    transition: position .25s ease;
   }
   </style>
 </head>
@@ -86,7 +85,7 @@ let playerPos = [0, 0];
     console.log(playerPos);
   }
 
-  function renderPlayer(newRow, newCol){
+  function renderPlayer(newRow, newCol, time){
     let renderedPlayer = document.querySelector('.player');
     renderedPlayer.style.top = newRow * 25 + 'px';
     renderedPlayer.style.left = newCol * 25 + 'px';
