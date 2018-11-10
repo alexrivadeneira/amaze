@@ -23,10 +23,22 @@
     background: #fff;
     position: absolute;
   }
+  .player{
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    background: yellow;
+    /* border: 1px solid black; */
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+  }
   </style>
 </head>
 <body>
   <div class="board">
+    <div class="player"></div>
   </div>
 <script>
   function createSquareGrid(n){
@@ -34,7 +46,8 @@
       for(let i = 0; i < n; i++){
         let row = [];
         for(let j = 0; j < n; j++){
-          if(Math.floor(Math.random() * 2) === 0){
+          let randInt = Math.floor(Math.random() * 3);
+          if(randInt === 0){
             row.push('X');
           } else {
             row.push('O');
@@ -42,6 +55,7 @@
         }
         grid.push(row);
       }
+      grid[0][0] = 'T';
       return grid;
   }
   const myGrid = createSquareGrid(20);
@@ -53,7 +67,6 @@
         let leftPos = row * 25;
         let topPos = col * 25;
         const spaceState = grid[row][col] === 'X' ? 'filled' : 'empty';
-        console.log(spaceState);
         let space =
         `<div
           class="${spaceState}"
@@ -62,7 +75,6 @@
             top: ${topPos}px;
           ">
         </div>`;
-        console.log(space);
         board.innerHTML += space;
 
       }
