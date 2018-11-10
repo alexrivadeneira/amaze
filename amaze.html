@@ -82,7 +82,6 @@ let playerPos = [0, 0];
       }
     }
     renderPlayer(playerPos[0], playerPos[1]);
-    console.log(playerPos);
   }
 
   function renderPlayer(newRow, newCol, time){
@@ -96,28 +95,19 @@ let playerPos = [0, 0];
     try{
       yourGrid[row][col];
     } catch {
-      console.log('out of bounds');
       return false;
     }
     if(!yourGrid[row][col]){
-      console.log('also out of bounds');
       return false;
     }
     if(yourGrid[row][col] === 'X'){
-      console.log('filled space');
       return false;
     } else if(yourGrid[row][col] === 'O') {
-      console.log('good!')
       return true;
     }
-    console.log('other');
     return true;
   }
 
-  //
-  // console.log('avail: ', isAvailableSpace(50,50, grid));
-  // console.log('avail: ', isAvailableSpace(-1,0, grid));
-  // console.log('avail: ', isAvailableSpace(0,0, grid));
 
   window.addEventListener('keydown', handleKeyDown);
 
@@ -140,11 +130,8 @@ let playerPos = [0, 0];
   }
 
 function drawGrid(coordinates){
-  console.log('draw grid: ', coordinates);
   for(let row = 0; row < coordinates.length; row++){
-    console.log('drawRow', row);
     for(let col = 0; col < coordinates[0].length; col++){
-      console.log('drawCol', col);
       let leftPos = col * 25;
       let topPos = row * 25;
       const spaceState = coordinates[row][col] === 'X' ? 'filled' : 'empty';
