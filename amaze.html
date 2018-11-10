@@ -33,6 +33,7 @@
     left: 0px;
     top: 0px;
     z-index: 1;
+    transition: position .25s ease;
   }
   </style>
 </head>
@@ -41,6 +42,11 @@
     <div class="player"></div>
   </div>
 <script>
+const LEFT = 'ArrowLeft';
+const RIGHT = 'ArrowRight';
+const UP = 'ArrowUp';
+const DOWN = 'ArrowDown';
+
   function createSquareGrid(n){
       let grid = [];
       for(let i = 0; i < n; i++){
@@ -58,8 +64,10 @@
       grid[0][0] = 'T';
       return grid;
   }
-  const myGrid = createSquareGrid(20);
+
+  const grid = createSquareGrid(20);
   const board = document.querySelector('.board');
+  let playerPos = [0, 0];
 
   function drawGrid(grid){
     for(let row = 0; row < grid.length; row++){
@@ -81,7 +89,73 @@
     }
   }
 
-  drawGrid(myGrid);
+  function handleKeyDown(e){
+    let newPlayerPos;
+    if(e.code === LEFT){
+      newPlayerPos = [playerPos[0], playerPos[1] - 1];
+      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        return;
+      } else {
+        playerPos = newPlayerPos;
+      }
+    } else if (e.code === RIGHT){
+      newPlayerPos = [playerPos[0], playerPos[1] + 1];
+      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        return;
+      } else {
+        playerPos = newPlayerPos;
+      }
+    } else if (e.code === UP){
+      newPlayerPos = [playerPos[0] - 1, playerPos[1]];
+      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        return;
+      } else {
+        playerPos = newPlayerPos;
+      }
+    } else if (e.code === DOWN){
+      newPlayerPos = [playerPos[0] + 1, playerPos[1]];
+      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+        return;
+      } else {
+        playerPos = newPlayerPos;
+      }
+    }
+    renderPlayer(playerPos[0], playerPos[1]);
+    console.log(playerPos);
+  }
+
+  function updatePlayerPos(){
+
+  }
+
+  function renderPlayer(newRow, newCol){
+    let renderedPlayer = document.querySelector('.player');
+    renderedPlayer.style.top = newRow * 25 + 'px';
+    renderedPlayer.style.left = newCol * 25 + 'px';
+
+  }
+
+  function isAvailableSpace(row, col, grid){
+    try{
+      grid[row][col];
+    } catch {
+      return false;
+    }
+    if(grid[row][col] === 'X'){
+      return false;
+    } else if(grid[row][col] === 'O') {
+      return true;
+    }
+    return false;
+  }
+
+  drawGrid(grid);
+
+  console.log('avail: ', isAvailableSpace(50,50, grid));
+  console.log('avail: ', isAvailableSpace(-1,0, grid));
+  console.log('avail: ', isAvailableSpace(0,0, grid));
+
+  window.addEventListener('keydown', handleKeyDown);
 
 </script>
 </body>
