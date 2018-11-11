@@ -67,6 +67,7 @@ const RIGHT = 'ArrowRight';
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
 
+
 const board = document.querySelector('.board');
 
 let playerPos = [0, 0];
@@ -108,6 +109,8 @@ let playerPos = [0, 0];
     }
     renderPlayer(playerPos[0], playerPos[1]);
   }
+
+
 
   function renderPlayer(newRow, newCol, time){
     let renderedPlayer = document.querySelector('.player');
@@ -169,6 +172,51 @@ let playerPos = [0, 0];
       return buildGrid;
   }
 
+function createEdgeGraph(grid){
+  let maxEdge = grid.length + 1;
+  let graph = {};
+
+  let edgeGrid = [];
+
+  for(let i = 0; i < maxEdge; i++){
+    for(let j = 0; j < maxEdge; j++){
+      edgeGrid.push([i,j]);
+      }
+    }
+
+  for(let i = 0; i < edgeGrid.length; i++){
+    let randInt = Math.floor(Math.random() * 3);
+    if(randInt === 1){
+      let randChoice = Math.floor(Math.random() * edgeGrid.length);
+      // console.log("graph edges: ", graph[edgeGrid[i]], edgeGrid[randChoice][0]);
+      if(edgeGrid[i][0] !== edgeGrid[randChoice][0] &&
+        edgeGrid[i][1] !== edgeGrid[randChoice][1]
+      ){
+        if(!graph[edgeGrid[i]]){
+          graph[edgeGrid[i]] = [edgeGrid[randChoice]];
+        } else {
+          graph[edgeGrid[i]].push(edgeGrid[randChoice]);
+        }
+        graph[edgeGrid[i]] = edgeGrid[randChoice];
+        graph[edgeGrid[randChoice]] = edgeGrid[i];
+      }
+    }
+  }
+  return graph;
+}
+
+function checkInArray(x, y, arr){
+  for(let i = 0; i < arr.length; i++){
+    if(arr[i][0] === x && arr[i][1] === y){
+      return true;
+    }
+    return false;
+  }
+}
+
+
+
+
 function drawGrid(coordinates){
   for(let row = 0; row < coordinates.length; row++){
     for(let col = 0; col < coordinates[0].length; col++){
@@ -187,7 +235,9 @@ function drawGrid(coordinates){
     }
   }
 }
-const grid = createSquareGrid(15);
+const grid = createSquareGrid(4);
+const edges = createEdgeGraph(grid);
+console.log("edges graph: ", edges);
 
 drawGrid(grid);
 
