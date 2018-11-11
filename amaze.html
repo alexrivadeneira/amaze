@@ -111,6 +111,12 @@ let playerPos = [0, 0];
 
   function renderPlayer(newRow, newCol, time){
     let renderedPlayer = document.querySelector('.player');
+
+    if(playerPos[0] !== newRow){
+
+    } else {
+
+    }
     renderedPlayer.style.top = newRow * 25 + 'px';
     renderedPlayer.style.left = newCol * 25 + 'px';
     renderedPlayer.style.transition = 'left top .25s';
@@ -120,6 +126,9 @@ let playerPos = [0, 0];
   function renderPlayerCantMove(){
     let renderedPlayer = document.querySelector('.player');
     renderedPlayer.style.animation = 'playerCantMove .25s ease';
+    setTimeout(function(){
+      renderedPlayer.style.animation = 'none';
+    }, 500);
   }
 
   function isAvailableSpace(row, col, yourGrid){
