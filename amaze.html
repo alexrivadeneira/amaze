@@ -240,7 +240,7 @@ function genEdgeObj(n){
       if(pointsArr[i][0] === pointsArr[j][0] && pointsArr[i][1] === pointsArr[j][1]){
         console.log('should skip');
       } else {
-        let randChoice = Math.floor(Math.random() * 3);
+        let randChoice = Math.floor(Math.random() * 4);
         if(randChoice === 1){
           edges[`${pointsArr[i]}:${pointsArr[j]}`] = true;
         } else {
