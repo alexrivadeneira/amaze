@@ -238,7 +238,7 @@ function genEdgeObj(n){
       console.log(pointsArr[i][0], pointsArr[j][0], pointsArr[i][1], pointsArr[j][1]);
 
       if(pointsArr[i][0] === pointsArr[j][0] && pointsArr[i][1] === pointsArr[j][1]){
-        console.log('should skip');
+        console.log('skip');
       } else {
         let randChoice = Math.floor(Math.random() * 4);
         if(randChoice === 1){
@@ -267,7 +267,7 @@ function genEdgeObjNew(n){
     let connections = genConnectingPoints(pointsArr[j][0], pointsArr[j][1], grid);
     console.log(connections);
     for(let i = 0; i < connections.length; i++){
-      let randInt = Math.floor(Math.random() * 3);
+      let randInt = Math.floor(Math.random() * 4);
       if(randInt === 0){
         newEdges[`${pointsArr[j][0]},${pointsArr[j][1]}:${connections[i][0]},${connections[i][1]}`] = true;
       } else {
@@ -364,10 +364,10 @@ function newDrawGrid(grid, graph){
         style="
           left: ${leftPos}px;
           top: ${topPos}px;
-          border-top: ${borders[0]}px solid #000;
-          border-right: ${borders[1]}px solid #000;
-          border-bottom: ${borders[2]}px solid #000;
-          border-left: ${borders[3]}px solid #000;
+          border-top: ${borders[0]}px dotted #fff;
+          border-right: ${borders[1]}px dotted #fff;
+          border-bottom: ${borders[2]}px dotted #fff;
+          border-left: ${borders[3]}px dotted #fff;
         ">
       </div>`;
       board.innerHTML += space;
