@@ -253,6 +253,62 @@ function genEdgeObj(n){
   return edges;
 }
 
+function genEdgeObjNew(n){
+  let pointsArr = [];
+  let newEdges = {};
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
+      pointsArr.push([i,j]);
+    }
+  }
+  console.log(pointsArr);
+
+  for(let j = 0; j < pointsArr.length; j++){
+    let connections = genConnectingPoints(pointsArr[j][0], pointsArr[j][1], grid);
+    console.log(connections);
+    for(let i = 0; i < connections.length; i++){
+      let randInt = Math.floor(Math.random() * 3);
+      if(randInt === 0){
+        newEdges[`${pointsArr[j][0]},${pointsArr[j][1]}:${connections[i][0]},${connections[i][1]}`] = true;
+      } else {
+        newEdges[`${pointsArr[j][0]},${pointsArr[j][1]}:${connections[i][0]},${connections[i][1]}`] = false;
+      }
+    }
+  }
+
+  // if(pointsArr[i][0] === pointsArr[j][0] && pointsArr[i][1] === pointsArr[j][1]){
+  //   console.log('should skip');
+  // } else {
+  //   let randChoice = Math.floor(Math.random() * 4);
+  //   if(randChoice === 1){
+  //     edges[`${pointsArr[i]}:${pointsArr[j]}`] = true;
+  //   } else {
+  //     edges[`${pointsArr[i]}:${pointsArr[j]}`] = false;
+  //   }
+  // }
+
+  return newEdges;
+
+}
+
+function genConnectingPoints(row, col, grid){
+  let maxPoint = grid.length;
+  let connections = [];
+  if(row + 1 < maxPoint){
+    connections.push([row +1, col]);
+  }
+  if(row - 1 >= 0){
+    connections.push([row -1, col]);
+  }
+  if(col + 1 < maxPoint){
+    connections.push([row, col +1]);
+  }
+  if(col - 1 >= 0){
+    connections.push([row, col-1]);
+  }
+  return connections;
+}
+
 function getFourCorners(row, col){
   let corners = [[row,col]];
   corners.push([row, col + 1]);
@@ -319,11 +375,19 @@ function newDrawGrid(grid, graph){
   }
 }
 
-const grid = createSquareGrid(7);
-const edges = genEdgeObj(7);
-// console.log(edges, edgeKeys);
-console.log(edges);
+const grid = createSquareGrid(17);
+// const edges = genEdgeObj(7);
+// console.log(Object.keys(edges).length);
+// console.log(edges);
+// newDrawGrid(grid);
+
+
+const edges = genEdgeObjNew(17);
 newDrawGrid(grid);
+
+console.log("newGenEdge: ", newGenEdge);
+
+console.log(Object.keys(newGenEdge).length);
 
 </script>
 </body>
