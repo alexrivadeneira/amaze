@@ -77,7 +77,7 @@ let playerPos = [0, 0];
     let newPlayerPos;
     if(e.code === LEFT){
       newPlayerPos = [playerPos[0], playerPos[1] - 1];
-      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
         renderPlayerCantMove();
         return;
       } else {
@@ -85,7 +85,7 @@ let playerPos = [0, 0];
       }
     } else if (e.code === RIGHT){
       newPlayerPos = [playerPos[0], playerPos[1] + 1];
-      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
         renderPlayerCantMove();
         return;
       } else {
@@ -93,7 +93,7 @@ let playerPos = [0, 0];
       }
     } else if (e.code === UP){
       newPlayerPos = [playerPos[0] - 1, playerPos[1]];
-      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
         renderPlayerCantMove();
         return;
       } else {
@@ -101,7 +101,7 @@ let playerPos = [0, 0];
       }
     } else if (e.code === DOWN){
       newPlayerPos = [playerPos[0] + 1, playerPos[1]];
-      if(!isAvailableSpace(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
         renderPlayerCantMove();
         return;
       } else {
@@ -152,6 +152,49 @@ let playerPos = [0, 0];
     return true;
   }
 
+  function isAvailableSpaceNew(row, col){
+    // try{
+    //   yourGrid[row][col];
+    // } catch {
+    //   return false;
+    // }
+    // if(!yourGrid[row][col]){
+    //   return false;
+    // }
+    let currPos = playerPos.slice("");
+    // getFourCorners(row, col)
+    let currCorners = getFourCorners(playerPos[0], playerPos[1]);
+    let newCorners = getFourCorners(row, col);
+
+    //optimize!
+    let sharedPoints = [];
+    for(let i = 0; i < currCorners.length; i++){
+      for(let j = 0; j < newCorners.length; j++){
+        if(currCorners[i][0] === newCorners[j][0] && currCorners[i][1] === newCorners[j][1]){
+          sharedPoints.push(currCorners[i]);
+        }
+      }
+    }
+    console.log('sharedPoints', sharedPoints);
+
+    // uses global edges
+    let edgeKeys = [
+      `${sharedPoints[0][0]},${sharedPoints[0][1]}:${sharedPoints[1][0]},${sharedPoints[1][1]}`,
+      `${sharedPoints[1][0]},${sharedPoints[1][1]}:${sharedPoints[0][0]},${sharedPoints[0][1]}`,
+    ];
+    console.log(edgeKeys);
+
+    for(let i = 0; i < edgeKeys.length; i++){
+      if(edges[edgeKeys[i]] === true){
+        console.log('wall!')
+        return false;
+      }
+    }
+    return true;
+
+    // get shared points
+
+  }
 
   window.addEventListener('keydown', handleKeyDown);
 
@@ -173,39 +216,6 @@ let playerPos = [0, 0];
       return buildGrid;
   }
 
-// function createEdgeGraph(grid){
-//   let maxEdge = grid.length + 1;
-//   let graph = {};
-//
-//   let edgeGrid = [];
-//
-//   for(let i = 0; i < maxEdge; i++){
-//     for(let j = 0; j < maxEdge; j++){
-//       edgeGrid.push([i,j]);
-//       }
-//     }
-//
-//   for(let i = 0; i < edgeGrid.length; i++){
-//     let randInt = Math.floor(Math.random() * 3);
-//     if(randInt === 1){
-//       let randChoice = Math.floor(Math.random() * edgeGrid.length);
-//       // console.log("graph edges: ", graph[edgeGrid[i]], edgeGrid[randChoice][0]);
-//       if(edgeGrid[i][0] !== edgeGrid[randChoice][0] &&
-//         edgeGrid[i][1] !== edgeGrid[randChoice][1]
-//       ){
-//         if(!graph[edgeGrid[i]]){
-//           graph[edgeGrid[i]] = [edgeGrid[randChoice]];
-//         } else {
-//           graph[edgeGrid[i]].push(edgeGrid[randChoice]);
-//         }
-//         graph[edgeGrid[i]] = edgeGrid[randChoice];
-//         graph[edgeGrid[randChoice]] = edgeGrid[i];
-//       }
-//     }
-//   }
-//   return graph;
-// }
-
 function checkInArray(x, y, arr){
   for(let i = 0; i < arr.length; i++){
     if(arr[i][0] === x && arr[i][1] === y){
@@ -214,7 +224,6 @@ function checkInArray(x, y, arr){
     return false;
   }
 }
-
 
 function genEdgeObj(n){
   let pointsArr = [];
@@ -264,7 +273,6 @@ function genBorderBools(corners, edges){
     edges[left] ? 1 : 0,
   ];
 }
-
 
 function drawGrid(coordinates){
   for(let row = 0; row < coordinates.length; row++){
