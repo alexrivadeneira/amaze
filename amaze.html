@@ -8,8 +8,7 @@
   .square{
     width: 25px;
     height: 25px;
-    background: yellow;
-    position: relative;
+    position: absolute;
   }
   .filled{
     width: 25px;
@@ -216,6 +215,7 @@ function checkInArray(x, y, arr){
   }
 }
 
+
 function genEdgeObj(n){
   let pointsArr = [];
   let edges = {};
@@ -257,7 +257,12 @@ function genBorderBools(corners, edges){
   let right = `${corners[1][0]},${corners[1][1]}:${corners[2][0]},${corners[2][1]}`;
   let bottom = `${corners[2][0]},${corners[2][1]}:${corners[3][0]},${corners[3][1]}`
   let left = `${corners[3][0]},${corners[3][1]}:${corners[0][0]},${corners[0][1]}`
-  return [edges[top], edges[right], edges[bottom], edges[left]];
+  return [
+    edges[top] ? 1 : 0,
+    edges[right] ? 1 : 0,
+    edges[bottom] ? 1 : 0,
+    edges[left] ? 1 : 0,
+  ];
 }
 
 
@@ -279,12 +284,38 @@ function drawGrid(coordinates){
     }
   }
 }
-const grid = createSquareGrid(3);
-const edges = genEdgeObj(3);
-const edgeKeys = Object.keys(edges).length;
-console.log(edges, edgeKeys);
 
-drawGrid(grid);
+function newDrawGrid(grid, graph){
+  // getFourCorners(row, col)
+  // genBorderBools(corners, edges)
+  for(let row = 0; row < grid.length; row++){
+    for(let col = 0; col < grid[0].length; col++){
+      let leftPos = col * 25;
+      let topPos = row * 25;
+      let corners = getFourCorners(row, col);
+      let borders = genBorderBools(corners, edges);
+      let space =
+      `<div
+        class="square"
+        style="
+          left: ${leftPos}px;
+          top: ${topPos}px;
+          border-top: ${borders[0]}px solid #000;
+          border-right: ${borders[1]}px solid #000;
+          border-bottom: ${borders[2]}px solid #000;
+          border-left: ${borders[3]}px solid #000;
+        ">
+      </div>`;
+      board.innerHTML += space;
+    }
+  }
+}
+
+const grid = createSquareGrid(15);
+const edges = genEdgeObj(15);
+// console.log(edges, edgeKeys);
+
+newDrawGrid(grid);
 
 </script>
 </body>
