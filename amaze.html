@@ -244,6 +244,21 @@ function genEdgeObj(n){
   return edges;
 }
 
+function getFourCorners(row, col){
+  let corners = [[row,col]];
+  corners.push([row, col + 1]);
+  corners.push([row + 1, col + 1]);
+  corners.push([row + 1, col]);
+  return corners;
+}
+
+function genBorderBools(corners, edges){
+  let top = `${corners[0][0]},${corners[0][1]}:${corners[1][0]},${corners[1][1]}`;
+  let right = `${corners[1][0]},${corners[1][1]}:${corners[2][0]},${corners[2][1]}`;
+  let bottom = `${corners[2][0]},${corners[2][1]}:${corners[3][0]},${corners[3][1]}`
+  let left = `${corners[3][0]},${corners[3][1]}:${corners[0][0]},${corners[0][1]}`
+  return [edges[top], edges[right], edges[bottom], edges[left]];
+}
 
 
 function drawGrid(coordinates){
