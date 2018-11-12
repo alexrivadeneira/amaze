@@ -172,38 +172,38 @@ let playerPos = [0, 0];
       return buildGrid;
   }
 
-function createEdgeGraph(grid){
-  let maxEdge = grid.length + 1;
-  let graph = {};
-
-  let edgeGrid = [];
-
-  for(let i = 0; i < maxEdge; i++){
-    for(let j = 0; j < maxEdge; j++){
-      edgeGrid.push([i,j]);
-      }
-    }
-
-  for(let i = 0; i < edgeGrid.length; i++){
-    let randInt = Math.floor(Math.random() * 3);
-    if(randInt === 1){
-      let randChoice = Math.floor(Math.random() * edgeGrid.length);
-      // console.log("graph edges: ", graph[edgeGrid[i]], edgeGrid[randChoice][0]);
-      if(edgeGrid[i][0] !== edgeGrid[randChoice][0] &&
-        edgeGrid[i][1] !== edgeGrid[randChoice][1]
-      ){
-        if(!graph[edgeGrid[i]]){
-          graph[edgeGrid[i]] = [edgeGrid[randChoice]];
-        } else {
-          graph[edgeGrid[i]].push(edgeGrid[randChoice]);
-        }
-        graph[edgeGrid[i]] = edgeGrid[randChoice];
-        graph[edgeGrid[randChoice]] = edgeGrid[i];
-      }
-    }
-  }
-  return graph;
-}
+// function createEdgeGraph(grid){
+//   let maxEdge = grid.length + 1;
+//   let graph = {};
+//
+//   let edgeGrid = [];
+//
+//   for(let i = 0; i < maxEdge; i++){
+//     for(let j = 0; j < maxEdge; j++){
+//       edgeGrid.push([i,j]);
+//       }
+//     }
+//
+//   for(let i = 0; i < edgeGrid.length; i++){
+//     let randInt = Math.floor(Math.random() * 3);
+//     if(randInt === 1){
+//       let randChoice = Math.floor(Math.random() * edgeGrid.length);
+//       // console.log("graph edges: ", graph[edgeGrid[i]], edgeGrid[randChoice][0]);
+//       if(edgeGrid[i][0] !== edgeGrid[randChoice][0] &&
+//         edgeGrid[i][1] !== edgeGrid[randChoice][1]
+//       ){
+//         if(!graph[edgeGrid[i]]){
+//           graph[edgeGrid[i]] = [edgeGrid[randChoice]];
+//         } else {
+//           graph[edgeGrid[i]].push(edgeGrid[randChoice]);
+//         }
+//         graph[edgeGrid[i]] = edgeGrid[randChoice];
+//         graph[edgeGrid[randChoice]] = edgeGrid[i];
+//       }
+//     }
+//   }
+//   return graph;
+// }
 
 function checkInArray(x, y, arr){
   for(let i = 0; i < arr.length; i++){
@@ -214,6 +214,33 @@ function checkInArray(x, y, arr){
   }
 }
 
+function genEdgeObj(n){
+  let pointsArr = [];
+  let edges = {};
+  for(let i = 0; i < n; i++){
+    for(let j = 0; j < n; j++){
+      pointsArr.push([i,j]);
+    }
+  }
+  for(let i = 0; i < pointsArr.length; i++){
+    for(let j = 0; j < pointsArr.length; j++){
+      console.log(pointsArr[i][0], pointsArr[j][0], pointsArr[i][1], pointsArr[j][1]);
+
+      if(pointsArr[i][0] === pointsArr[j][0] && pointsArr[i][1] === pointsArr[j][1]){
+        console.log('should skip');
+      } else {
+        let randChoice = Math.floor(Math.random() * 3);
+        if(randChoice === 1){
+          edges[`${pointsArr[i]}:${pointsArr[j]}`] = true;
+        } else {
+          edges[`${pointsArr[i]}:${pointsArr[j]}`] = false;
+        }
+      }
+
+    }
+  }
+  return edges;
+}
 
 
 
@@ -235,9 +262,10 @@ function drawGrid(coordinates){
     }
   }
 }
-const grid = createSquareGrid(4);
-const edges = createEdgeGraph(grid);
-console.log("edges graph: ", edges);
+const grid = createSquareGrid(3);
+const edges = genEdgeObj(3);
+const edgeKeys = Object.keys(edges).length;
+console.log(edges, edgeKeys);
 
 drawGrid(grid);
 
