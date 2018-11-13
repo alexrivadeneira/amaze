@@ -5,21 +5,12 @@
   body{
     background: #586da1;
   }
+  .board{
+    display: flex;
+  }
   .square{
     width: 25px;
     height: 25px;
-    position: absolute;
-  }
-  .filled{
-    width: 25px;
-    height: 25px;
-    background: black;
-    position: absolute;
-  }
-  .empty{
-    width: 25px;
-    height: 25px;
-    background: grey;
     position: absolute;
   }
   .player{
@@ -35,13 +26,20 @@
     transition: opacity .25s;
     transition: width .25s;
     transition: height .25s;
-
+  }
+  .teleport{
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    background: #000;
   }
   .player.moving{
     opacity: .7;
     width: 15px;
     height: 15px;
   }
+
+
 
 
 
@@ -323,11 +321,21 @@ function genBorderBools(corners, edges){
   let bottom = `${corners[2][0]},${corners[2][1]}:${corners[3][0]},${corners[3][1]}`
   let left = `${corners[3][0]},${corners[3][1]}:${corners[0][0]},${corners[0][1]}`
   return [
-    edges[top] ? 1 : 0,
-    edges[right] ? 1 : 0,
-    edges[bottom] ? 1 : 0,
-    edges[left] ? 1 : 0,
+    edges[top] ? 2 : 0,
+    edges[right] ? 2 : 0,
+    edges[bottom] ? 2 : 0,
+    edges[left] ? 2 : 0,
   ];
+}
+
+function setTeleports(grid){
+  let gridSize = grid.length;
+  let randChoice = Math.floor(Math.random() * gridSize);
+  let secondRandChoice = Math.floor(Math.random() * gridSize);
+  while(secondRandChoice === randChoice){
+    secondRandChoice = Math.floor(Math.random() * gridSize);
+  }
+
 }
 
 function drawGrid(coordinates){
@@ -364,10 +372,10 @@ function newDrawGrid(grid, graph){
         style="
           left: ${leftPos}px;
           top: ${topPos}px;
-          border-top: ${borders[0]}px dotted #fff;
-          border-right: ${borders[1]}px dotted #fff;
-          border-bottom: ${borders[2]}px dotted #fff;
-          border-left: ${borders[3]}px dotted #fff;
+          border-top: ${borders[0]}px solid #fff;
+          border-right: ${borders[1]}px solid #fff;
+          border-bottom: ${borders[2]}px solid #fff;
+          border-left: ${borders[3]}px solid #fff;
         ">
       </div>`;
       board.innerHTML += space;
