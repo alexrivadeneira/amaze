@@ -150,14 +150,17 @@ let playerPos = [0, 0];
   }
 
   function isAvailableSpaceNew(row, col){
-    // try{
-    //   yourGrid[row][col];
-    // } catch {
-    //   return false;
-    // }
-    // if(!yourGrid[row][col]){
-    //   return false;
-    // }
+    try{
+      grid[row][col];
+    } catch {
+      console.log('off grid');
+      return false;
+    }
+    if(!grid[row][col]){
+      console.log('off grid');
+      return false;
+    }
+
     let currPos = playerPos.slice("");
     // getFourCorners(row, col)
     let currCorners = getFourCorners(playerPos[0], playerPos[1]);
@@ -171,11 +174,9 @@ let playerPos = [0, 0];
       `${sharedPoints[0][0]},${sharedPoints[0][1]}:${sharedPoints[1][0]},${sharedPoints[1][1]}`,
       `${sharedPoints[1][0]},${sharedPoints[1][1]}:${sharedPoints[0][0]},${sharedPoints[0][1]}`,
     ];
-    console.log(edgeKeys);
 
     for(let i = 0; i < edgeKeys.length; i++){
       if(edges[edgeKeys[i]] === true){
-        console.log('wall!')
         return false;
       }
     }
@@ -236,12 +237,10 @@ function genEdgeObj(n){
   }
   for(let i = 0; i < pointsArr.length; i++){
     for(let j = 0; j < pointsArr.length; j++){
-      console.log(pointsArr[i][0], pointsArr[j][0], pointsArr[i][1], pointsArr[j][1]);
 
       if(pointsArr[i][0] === pointsArr[j][0] && pointsArr[i][1] === pointsArr[j][1]){
-        console.log('skip');
       } else {
-        let randChoice = Math.floor(Math.random() * 4);
+        let randChoice = Math.floor(Math.random() * 3);
         if(randChoice === 1){
           edges[`${pointsArr[i]}:${pointsArr[j]}`] = true;
         } else {
@@ -264,7 +263,6 @@ function genEdgeObjNew(n){
       pointsArr.push([i,j]);
     }
   }
-  // console.log(pointsArr);
 
   for(let j = 0; j < pointsArr.length; j++){
     let connections = genConnectingPoints(pointsArr[j][0], pointsArr[j][1], grid);
@@ -305,7 +303,6 @@ function borePath(grid){
     }
   }
 
-console.log('path ', path);
 
   // function genConnectingPoints(row, col, grid){
   //   function getFourCorners(row, col){
@@ -315,7 +312,6 @@ console.log('path ', path);
     // function getCommonEdge(square1, square2){
     //   function convertToEdgeKey(point1, point2){
     let commonEdge = getCommonEdge(path[i], path[i+1]);
-    console.log('common edge: ', commonEdge);
     edgesToBreak.push(convertToEdgeKey(commonEdge[0], commonEdge[1]));
     edgesToBreak.push(convertToEdgeKey(commonEdge[1], commonEdge[0]));
 
@@ -337,13 +333,10 @@ function getCommonEdge(square1, square2){
     larger = square2;
     smaller = square1;
   }
-  console.log([larger, [smaller[0] + 1, smaller[1] + 1]]);
   return [larger, [smaller[0] + 1, smaller[1] + 1]];
 }
 
 function convertToEdgeKey(point1, point2){
-  console.log('points: ', point1, point2);
-  console.log('str: ', `${point1[0]},${point1[1]}:${point2[0]},${point2[1]}`);
   return `${point1[0]},${point1[1]}:${point2[0]},${point2[1]}`;
 }
 
@@ -416,7 +409,6 @@ function drawGrid(coordinates){
 }
 
 function newDrawGrid(grid, graph){
-  console.log('draw new grid');
   const board = document.querySelector('.board');
   board.innerHTML = '<div class="player"></div>';
   // getFourCorners(row, col)
@@ -445,11 +437,6 @@ function newDrawGrid(grid, graph){
 }
 
 const grid = createSquareGrid(17);
-// const edges = genEdgeObj(7);
-// console.log(Object.keys(edges).length);
-// console.log(edges);
-// newDrawGrid(grid);
-
 
 let edges = genEdgeObjNew(17);
 newDrawGrid(grid);
@@ -457,7 +444,6 @@ borePath(grid);
 
 // borePath(grid);
 
-// console.log(Object.keys(newGenEdge).length);
 
 </script>
 </body>
