@@ -4,11 +4,20 @@
   <style>
   body{
     background: #586da1;
-  }
-  .board{
     display: flex;
   }
+  .board{
+    width: 350px;
+    overflow: auto;
+    height: 350px;
+    justify-content: center;
+    display: flex;
+    position: relative;
+    background: grey;
+    border: 3px solid #000;
+  }
   .square{
+    flex-direction: column;
     width: 25px;
     height: 25px;
     position: absolute;
@@ -57,6 +66,7 @@
   </style>
 </head>
 <body>
+  <h1>Amaze</h1>
   <div class="board">
     <div class="player"></div>
   </div>
@@ -240,7 +250,7 @@ function genEdgeObj(n){
 
       if(pointsArr[i][0] === pointsArr[j][0] && pointsArr[i][1] === pointsArr[j][1]){
       } else {
-        let randChoice = Math.floor(Math.random() * 3);
+        let randChoice = Math.floor(Math.random() * 4);
         if(randChoice === 1){
           edges[`${pointsArr[i]}:${pointsArr[j]}`] = true;
         } else {
@@ -282,6 +292,7 @@ function borePath(grid){
   let x = 0, y = 0;
   const max = grid.length;
   let path = [[0,0]];
+
   while(x <= max - 1 || y <= max - 1){
 
     if(x === max){
@@ -303,18 +314,13 @@ function borePath(grid){
     }
   }
 
-
-  // function genConnectingPoints(row, col, grid){
-  //   function getFourCorners(row, col){
   let edgesToBreak = [];
 
+  console.log('path: ', path);
   for(let i = 0; i < path.length - 1; i++){
-    // function getCommonEdge(square1, square2){
-    //   function convertToEdgeKey(point1, point2){
     let commonEdge = getCommonEdge(path[i], path[i+1]);
     edgesToBreak.push(convertToEdgeKey(commonEdge[0], commonEdge[1]));
     edgesToBreak.push(convertToEdgeKey(commonEdge[1], commonEdge[0]));
-
   }
 
   for(let i = 0; i < edgesToBreak.length; i++){
@@ -425,10 +431,10 @@ function newDrawGrid(grid, graph){
         style="
           left: ${leftPos}px;
           top: ${topPos}px;
-          border-top: ${borders[0]}px solid #fff;
-          border-right: ${borders[1]}px solid #fff;
-          border-bottom: ${borders[2]}px solid #fff;
-          border-left: ${borders[3]}px solid #fff;
+          border-top: ${borders[0]}px ridge #000;
+          border-right: ${borders[1]}px inset #000;
+          border-bottom: ${borders[2]}px inset #000;
+          border-left: ${borders[3]}px inset #000;
         ">
       </div>`;
       board.innerHTML += space;
@@ -436,9 +442,9 @@ function newDrawGrid(grid, graph){
   }
 }
 
-const grid = createSquareGrid(17);
+const grid = createSquareGrid(15);
 
-let edges = genEdgeObjNew(17);
+let edges = genEdgeObjNew(15);
 newDrawGrid(grid);
 borePath(grid);
 
