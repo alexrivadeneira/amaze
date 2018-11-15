@@ -34,8 +34,14 @@
     z-index: 1;
     opacity: 1;
     transition: opacity .25s;
-    transition: width .25s;
-    transition: height .25s;
+
+  }
+  .enemy{
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    background: #000;
+    position: absolute;
   }
   .teleport{
     width: 25px;
@@ -48,10 +54,6 @@
     width: 15px;
     height: 15px;
   }
-
-
-
-
 
   @keyframes playerCantMove{
     0%{
@@ -77,15 +79,21 @@ const RIGHT = 'ArrowRight';
 const UP = 'ArrowUp';
 const DOWN = 'ArrowDown';
 
+const GRID_WIDTH = 15;
 
 
 let playerPos = [0, 0];
+
+let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
+   Math.floor(Math.random() * GRID_WIDTH)];
+
+  console.log(enemyPos);
 
   function handleKeyDown(e){
     let newPlayerPos;
     if(e.code === LEFT){
       newPlayerPos = [playerPos[0], playerPos[1] - 1];
-      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(playerPos, newPlayerPos[0], newPlayerPos[1])){
         renderPlayerCantMove();
         return;
       } else {
@@ -93,7 +101,7 @@ let playerPos = [0, 0];
       }
     } else if (e.code === RIGHT){
       newPlayerPos = [playerPos[0], playerPos[1] + 1];
-      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(playerPos, newPlayerPos[0], newPlayerPos[1])){
         renderPlayerCantMove();
         return;
       } else {
@@ -101,7 +109,7 @@ let playerPos = [0, 0];
       }
     } else if (e.code === UP){
       newPlayerPos = [playerPos[0] - 1, playerPos[1]];
-      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(playerPos, newPlayerPos[0], newPlayerPos[1], grid)){
         renderPlayerCantMove();
         return;
       } else {
@@ -109,7 +117,7 @@ let playerPos = [0, 0];
       }
     } else if (e.code === DOWN){
       newPlayerPos = [playerPos[0] + 1, playerPos[1]];
-      if(!isAvailableSpaceNew(newPlayerPos[0], newPlayerPos[1], grid)){
+      if(!isAvailableSpaceNew(playerPos, newPlayerPos[0], newPlayerPos[1], grid)){
         renderPlayerCantMove();
         return;
       } else {
@@ -119,9 +127,54 @@ let playerPos = [0, 0];
     renderPlayer(playerPos[0], playerPos[1]);
   }
 
+  function moveEnemy(){
+    let newEnemyPos;
+    let randomMoveChoice = Math.floor(Math.random() * 4);
+    // left
+    console.log(enemyPos);
+    if(randomMoveChoice === 0){
+      newEnemyPos = [enemyPos[0], enemyPos[1] - 1];
+      if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
+        renderPlayerCantMove();
+        return;
+      } else {
+        enemyPos = newEnemyPos;
+      }
+      // right
+    } else if (randomMoveChoice === 1){
+      newEnemyPos = [enemyPos[0], enemyPos[1] + 1];
+      if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
+        renderPlayerCantMove();
+        return;
+      } else {
+        enemyPos = newEnemyPos;
+      }
+
+      // up
+    } else if (randomMoveChoice === 2){
+      newEnemyPos = [enemyPos[0] - 1, enemyPos[1]];
+      if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
+        renderPlayerCantMove();
+        return;
+      } else {
+        enemyPos = newEnemyPos;
+      }
+      // down
+    } else if (randomMoveChoice === 3){
+      newEnemyPos = [enemyPos[0] + 1, enemyPos[1]];
+      if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
+        renderPlayerCantMove();
+        return;
+      } else {
+        enemyPos = newEnemyPos;
+      }
+    }
+    renderEnemy(enemyPos[0], enemyPos[1]);
+  }
 
 
-  function renderPlayer(newRow, newCol, time){
+
+  function renderPlayer(newRow, newCol){
     let renderedPlayer = document.querySelector('.player');
 
     if(playerPos[0] !== newRow){
@@ -133,6 +186,20 @@ let playerPos = [0, 0];
     renderedPlayer.style.left = newCol * 25 + 'px';
     renderedPlayer.style.transition = 'left top .25s';
     renderedPlayer.style.transition = 'top .25s';
+  }
+
+  function renderEnemy(newRow, newCol){
+    let renderedEnemy = document.querySelector('.enemy');
+
+    if(enemyPos[0] !== newRow){
+
+    } else {
+
+    }
+    renderedEnemy.style.top = newRow * 25 + 'px';
+    renderedEnemy.style.left = newCol * 25 + 'px';
+    renderedEnemy.style.transition = 'left top .25s';
+    renderedEnemy.style.transition = 'top .25s';
   }
 
   function renderPlayerCantMove(){
@@ -160,7 +227,7 @@ let playerPos = [0, 0];
     return true;
   }
 
-  function isAvailableSpaceNew(row, col){
+  function isAvailableSpaceNew(user, row, col){
     try{
       grid[row][col];
     } catch {
@@ -174,9 +241,9 @@ let playerPos = [0, 0];
 
     // console.log(grid);
 
-    let currPos = playerPos.slice("");
+    let currPos = user.slice("");
     // getFourCorners(row, col)
-    let currCorners = getFourCorners(playerPos[0], playerPos[1]);
+    let currCorners = getFourCorners(user[0], user[1]);
     let newCorners = getFourCorners(row, col);
 
     //optimize!
@@ -419,7 +486,7 @@ function drawGrid(coordinates){
 
 function newDrawGrid(grid, graph){
   const board = document.querySelector('.board');
-  board.innerHTML = '<div class="player"></div>';
+  board.innerHTML = '<div class="player"></div><div class="enemy"></div>';
   // getFourCorners(row, col)
   // genBorderBools(corners, edges)
   for(let row = 0; row < grid.length; row++){
@@ -445,12 +512,14 @@ function newDrawGrid(grid, graph){
   }
 }
 
-const grid = createSquareGrid(14);
+const grid = createSquareGrid(GRID_WIDTH - 1);
 
-let edges = genEdgeObjNew(15);
+let edges = genEdgeObjNew(GRID_WIDTH);
 newDrawGrid(grid);
 borePath(grid);
 
+renderEnemy(enemyPos[0], enemyPos[1]);
+setInterval(moveEnemy, 1000);
 // borePath(grid);
 
 
