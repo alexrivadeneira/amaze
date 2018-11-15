@@ -17,6 +17,19 @@
     background: grey;
     border: 3px solid #000;
   }
+  .win-square{
+    flex-direction: column;
+    border-radius: 5px;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    background: yellow;
+    z-index: 1;
+    animation-name: winSquare;
+    animation-duration: 15s;
+    animation-iteration-count: infinite;
+
+  }
   .square{
     flex-direction: column;
     border-radius: 5px;
@@ -82,6 +95,33 @@
     color: #fff;
     text-align: center;
   }
+  @keyframes winSquare{
+    10%{
+      background: red;
+    }
+    20%{
+      background: orange;
+    }
+    30%{
+      background: yellow;
+    }
+    40%{
+      background: green;
+    }
+    50%{
+      background: blue;
+    }
+    60%{
+      background: indigo;
+    }
+    70%{
+      background: violet;
+    }
+    80%{
+      background: red;
+    }
+  }
+
   @keyframes playerCantMove{
     0%{
       background: yellow;
@@ -130,10 +170,9 @@ const GRID_WIDTH = 15;
 
 let playerPos = [0, 0];
 
-let enemyPos = [Math.floor(Math.random() * GRID_WIDTH -1 ),
-   Math.floor(Math.random() * GRID_WIDTH-1)];
+let enemyPos = [Math.floor(Math.random() * (GRID_WIDTH -1) ),
+   Math.floor(Math.random() * (GRID_WIDTH-1))];
 
-  console.log(enemyPos);
 
   function handleKeyDown(e){
     let newPlayerPos;
@@ -182,9 +221,16 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH -1 ),
     renderPlayer(playerPos[0], playerPos[1]);
   }
 
+  function renderWinSquare(){
+    let square = document.querySelector('.win-square');
+    let leftPos = (GRID_WIDTH - 2) * 25 + 'px';
+    let topPos = (GRID_WIDTH - 2) * 25 + 'px';
+    square.style.top = topPos;
+    square.style.left = leftPos;
+  }
+
   function checkPlayerWin(){
     if(playerPos[0] === GRID_WIDTH - 2 && playerPos[1] === GRID_WIDTH - 2){
-      console.log('win');
 
       const modal = document.querySelector('.win-modal');
       modal.style.display = 'block';
@@ -196,7 +242,6 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH -1 ),
     playerPos = [1000,1000];
     clearInterval(moveEnemyInterval);
     window.removeEventListener('keydown', handleKeyDown);
-
   }
 
   function checkForCollide(){
@@ -322,15 +367,12 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH -1 ),
     try{
       grid[row][col];
     } catch {
-      console.log('off grid');
       return false;
     }
     if(!grid[row][col]){
-      console.log('off grid');
       return false;
     }
 
-    // console.log(grid);
 
     let currPos = user.slice("");
     // getFourCorners(row, col)
@@ -477,7 +519,6 @@ function borePath(grid){
 
   let edgesToBreak = [];
 
-  console.log('path: ', path);
   for(let i = 0; i < path.length - 1; i++){
     let commonEdge = getCommonEdge(path[i], path[i+1]);
     edgesToBreak.push(convertToEdgeKey(commonEdge[0], commonEdge[1]));
@@ -577,7 +618,7 @@ function drawGrid(coordinates){
 
 function newDrawGrid(grid, graph){
   const board = document.querySelector('.board');
-  board.innerHTML = '<div class="player"></div><div class="enemy"></div>';
+  board.innerHTML = '<div class="player"></div><div class="enemy"></div><div class="win-square"></div>';
   // getFourCorners(row, col)
   // genBorderBools(corners, edges)
   for(let row = 0; row < grid.length; row++){
@@ -608,7 +649,7 @@ const grid = createSquareGrid(GRID_WIDTH - 1);
 let edges = genEdgeObjNew(GRID_WIDTH);
 newDrawGrid(grid);
 borePath(grid);
-
+renderWinSquare();
 renderEnemy(enemyPos[0], enemyPos[1]);
 const moveEnemyInterval = setInterval(moveEnemy, 500);
 
