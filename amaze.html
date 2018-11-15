@@ -4,7 +4,7 @@
   <style>
   body{
     background: #586da1;
-    display: flex;
+    /* display: flex; */
     font-family: courier;
   }
   .board{
@@ -55,7 +55,33 @@
     width: 15px;
     height: 15px;
   }
+  .win-modal{
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .7;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+  }
+  .lose-modal{
+    width: 100%;
+    height: 100%;
+    background: red;
+    opacity: .7;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+  }
 
+  .win-modal > h1, .lose-modal > h1{
+    color: #fff;
+    text-align: center;
+  }
   @keyframes playerCantMove{
     0%{
       background: yellow;
@@ -82,7 +108,14 @@
   </style>
 </head>
 <body>
+  <div class="win-modal">
+    <h1>You won! :)</h1>
+  </div>
+  <div class="lose-modal">
+    <h1>You got eaten! :(</h1>
+  </div>
   <h1>a-maze</h1>
+
   <div class="board">
     <div class="player"></div>
   </div>
@@ -97,8 +130,8 @@ const GRID_WIDTH = 15;
 
 let playerPos = [0, 0];
 
-let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
-   Math.floor(Math.random() * GRID_WIDTH)];
+let enemyPos = [Math.floor(Math.random() * GRID_WIDTH -1 ),
+   Math.floor(Math.random() * GRID_WIDTH-1)];
 
   console.log(enemyPos);
 
@@ -111,6 +144,8 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         playerPos = newPlayerPos;
+        checkForCollide();
+
       }
     } else if (e.code === RIGHT){
       newPlayerPos = [playerPos[0], playerPos[1] + 1];
@@ -119,6 +154,8 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         playerPos = newPlayerPos;
+        checkForCollide();
+
       }
     } else if (e.code === UP){
       newPlayerPos = [playerPos[0] - 1, playerPos[1]];
@@ -127,6 +164,8 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         playerPos = newPlayerPos;
+        checkForCollide();
+
       }
     } else if (e.code === DOWN){
       newPlayerPos = [playerPos[0] + 1, playerPos[1]];
@@ -135,16 +174,43 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         playerPos = newPlayerPos;
+        checkForCollide();
+
       }
     }
+    checkPlayerWin();
     renderPlayer(playerPos[0], playerPos[1]);
+  }
+
+  function checkPlayerWin(){
+    if(playerPos[0] === GRID_WIDTH - 2 && playerPos[1] === GRID_WIDTH - 2){
+      console.log('win');
+
+      const modal = document.querySelector('.win-modal');
+      modal.style.display = 'block';
+      clearBoardOfPlayers();
+    }
+  }
+
+  function clearBoardOfPlayers(){
+    playerPos = [1000,1000];
+    clearInterval(moveEnemyInterval);
+    window.removeEventListener('keydown', handleKeyDown);
+
+  }
+
+  function checkForCollide(){
+    if(playerPos[0] === enemyPos[0] && playerPos[1] === enemyPos[1]){
+      const modal = document.querySelector('.lose-modal');
+      modal.style.display = 'block';
+      clearBoardOfPlayers();
+    }
   }
 
   function moveEnemy(){
     let newEnemyPos;
     let randomMoveChoice = Math.floor(Math.random() * 4);
     // left
-    console.log(enemyPos);
     if(randomMoveChoice === 0){
       newEnemyPos = [enemyPos[0], enemyPos[1] - 1];
       if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
@@ -152,6 +218,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         enemyPos = newEnemyPos;
+        checkForCollide();
       }
       // right
     } else if (randomMoveChoice === 1){
@@ -161,6 +228,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         enemyPos = newEnemyPos;
+        checkForCollide();
       }
 
       // up
@@ -171,6 +239,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         enemyPos = newEnemyPos;
+        checkForCollide();
       }
       // down
     } else if (randomMoveChoice === 3){
@@ -180,6 +249,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
         return;
       } else {
         enemyPos = newEnemyPos;
+        checkForCollide();
       }
     }
     renderEnemy(enemyPos[0], enemyPos[1]);
@@ -537,11 +607,10 @@ const grid = createSquareGrid(GRID_WIDTH - 1);
 
 let edges = genEdgeObjNew(GRID_WIDTH);
 newDrawGrid(grid);
-// borePath(grid);
+borePath(grid);
 
 renderEnemy(enemyPos[0], enemyPos[1]);
-setInterval(moveEnemy, 500);
-// borePath(grid);
+const moveEnemyInterval = setInterval(moveEnemy, 500);
 
 
 </script>
