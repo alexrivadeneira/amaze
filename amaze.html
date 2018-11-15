@@ -66,6 +66,18 @@
       background: yellow;
     }
   }
+
+    @keyframes enemyCantMove{
+      0%{
+        background: #000;
+      }
+      50%{
+        background: #fff;
+      }
+      100%{
+        background: #000;
+      }
+    }
   </style>
 </head>
 <body>
@@ -135,7 +147,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
     if(randomMoveChoice === 0){
       newEnemyPos = [enemyPos[0], enemyPos[1] - 1];
       if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
-        renderPlayerCantMove();
+        renderEnemyCantMove();
         return;
       } else {
         enemyPos = newEnemyPos;
@@ -144,7 +156,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
     } else if (randomMoveChoice === 1){
       newEnemyPos = [enemyPos[0], enemyPos[1] + 1];
       if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
-        renderPlayerCantMove();
+        renderEnemyCantMove();
         return;
       } else {
         enemyPos = newEnemyPos;
@@ -154,7 +166,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
     } else if (randomMoveChoice === 2){
       newEnemyPos = [enemyPos[0] - 1, enemyPos[1]];
       if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
-        renderPlayerCantMove();
+        renderEnemyCantMove();
         return;
       } else {
         enemyPos = newEnemyPos;
@@ -163,7 +175,7 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
     } else if (randomMoveChoice === 3){
       newEnemyPos = [enemyPos[0] + 1, enemyPos[1]];
       if(!isAvailableSpaceNew(enemyPos, newEnemyPos[0], newEnemyPos[1])){
-        renderPlayerCantMove();
+        renderEnemyCantMove();
         return;
       } else {
         enemyPos = newEnemyPos;
@@ -207,6 +219,14 @@ let enemyPos = [Math.floor(Math.random() * GRID_WIDTH),
     renderedPlayer.style.animation = 'playerCantMove .25s ease';
     setTimeout(function(){
       renderedPlayer.style.animation = 'none';
+    }, 500);
+  }
+
+  function renderEnemyCantMove(){
+    let renderedEnemy = document.querySelector('.enemy');
+    renderedEnemy.style.animation = 'enemyCantMove .25s ease';
+    setTimeout(function(){
+      renderedEnemy.style.animation = 'none';
     }, 500);
   }
 
@@ -519,7 +539,7 @@ newDrawGrid(grid);
 borePath(grid);
 
 renderEnemy(enemyPos[0], enemyPos[1]);
-setInterval(moveEnemy, 1000);
+setInterval(moveEnemy, 500);
 // borePath(grid);
 
 
